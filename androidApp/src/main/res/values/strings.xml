@@ -37,6 +37,14 @@
         <item>Expert</item>
     </string-array>
 
+    <!-- main -->
+    <string name="begin">Begin</string>
+    <string name="question_settings">Question settings</string>
+    <string name="profile">Profile</string>
+    <string name="main_menu">Main menu</string>
+    <string name="leaderboards">Leaderboards</string>
+    <string name="search_users">Search users</string>
+
     <!-- authentication -->
     <string name="enter_username">Enter username</string>
     <string name="enter_password">Enter password</string>
@@ -104,6 +112,5 @@
     <string name="save_settings_fail">Failed to save settings</string>
 
     <!-- users -->
-    <string name="search_users">Search users</string>
     <string name="search_users_fail">Failed to search users</string>
 </resources>

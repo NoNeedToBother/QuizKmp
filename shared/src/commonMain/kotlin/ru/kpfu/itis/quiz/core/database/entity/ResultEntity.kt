@@ -1,5 +1,6 @@
 package ru.kpfu.itis.quiz.core.database.entity
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
@@ -23,7 +24,9 @@ data class ResultEntity(
     val total: Int,
     val difficulty: String,
     val category: String,
+    @ColumnInfo(name = "game_mode")
     val gameMode: String,
     val score: Double,
+    @ColumnInfo(name = "user_id")
     val userId: Long,
 )
