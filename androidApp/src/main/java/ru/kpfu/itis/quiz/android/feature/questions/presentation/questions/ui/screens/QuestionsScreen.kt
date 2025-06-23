@@ -20,31 +20,33 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.koin.compose.viewmodel.koinViewModel
 import ru.kpfu.itis.quiz.android.R
-import ru.kpfu.itis.quiz.android.feature.questions.presentation.questions.mvi.QuestionsScreenSideEffect
-import ru.kpfu.itis.quiz.android.feature.questions.presentation.questions.mvi.QuestionsScreenState
+import ru.kpfu.itis.quiz.feature.questions.presentation.questions.mvi.QuestionsScreenSideEffect
+import ru.kpfu.itis.quiz.feature.questions.presentation.questions.mvi.QuestionsScreenState
 import ru.kpfu.itis.quiz.android.feature.questions.presentation.questions.ui.components.QuestionPage
 import ru.kpfu.itis.quiz.android.core.designsystem.components.ErrorDialog
 import ru.kpfu.itis.quiz.android.core.designsystem.components.Stopwatch
+import ru.kpfu.itis.quiz.feature.questions.presentation.questions.mvi.QuestionsScreenIntent
+import ru.kpfu.itis.quiz.feature.questions.presentation.questions.viewmodel.QuestionsViewModel
 import kotlin.math.abs
 
 @Composable
-fun QuestionsScreen() {
-    /*val di = localDI()
-    val viewModel: QuestionsViewModel by di.instance()
-
+fun QuestionsScreen(
+    viewModel: QuestionsViewModel = koinViewModel()
+) {
     val state = viewModel.container.stateFlow.collectAsState()
     val effect = viewModel.container.sideEffectFlow
 
     var error by remember { mutableStateOf<Pair<String, String>?>(null) }
 
     LaunchedEffect(Unit) {
-        viewModel.getQuestions()
-        viewModel.getMaxScore()
+        viewModel.onIntent(QuestionsScreenIntent.GetQuestions)
+        viewModel.onIntent(QuestionsScreenIntent.GetMaxScore)
 
         effect.collect {
             when(it) {
@@ -68,9 +70,9 @@ fun QuestionsScreen() {
         modifier = Modifier.fillMaxSize(),
         state = state.value,
         onAnswerSelected = { question, answerPos ->
-            viewModel.updateChosenAnswers(question, answerPos)
+            viewModel.onIntent(QuestionsScreenIntent.UpdateAnswers(question, answerPos))
         },
-        onEndClick = { viewModel.onQuestionsEnd() }
+        onEndClick = { viewModel.onIntent(QuestionsScreenIntent.EndQuestions) }
     )
 
     Box {
@@ -81,7 +83,7 @@ fun QuestionsScreen() {
                 text = it.second
             )
         }
-    }*/
+    }
 }
 
 @Composable
@@ -118,7 +120,7 @@ fun ScreenContent(
             state = pagerState,
             modifier = Modifier.fillMaxSize()
         ) { page ->
-            val configuration = LocalConfiguration.current
+            //val configuration = LocalConfiguration.current
             val pageOffset = (pagerState.currentPage - page) + pagerState.currentPageOffsetFraction
             val minScale = 0.8f
 
@@ -130,7 +132,7 @@ fun ScreenContent(
             }
 
             val rotation = if (pageOffset <= 0) pageOffset * -45f else 0f
-            val translationX = if (pageOffset <= 1) pageOffset * configuration.screenWidthDp * -1 else 0f
+            val translationX = if (pageOffset <= 1) pageOffset * LocalWindowInfo.current.containerSize.width * -1 else 0f
             val scale = if (pageOffset <= 1) (minScale + (1 - minScale) * (1 - abs(pageOffset))) else 1f
 
             var correct by remember { mutableStateOf(

@@ -10,7 +10,7 @@ import ru.kpfu.itis.quiz.core.util.encrypt
 import ru.kpfu.itis.quiz.feature.authentication.data.mapper.nullableEntityToUser
 import ru.kpfu.itis.quiz.feature.authentication.domain.repository.AuthenticationRepository
 
-class AuthenticationRepositoryImpl(
+internal class AuthenticationRepositoryImpl(
     private val appDatabase: AppDatabase,
 ) : AuthenticationRepository {
 

@@ -9,3 +9,9 @@ plugins {
     alias(libs.plugins.ksp).apply(false)
     alias(libs.plugins.room).apply(false)
 }
+
+buildscript {
+    dependencies {
+        classpath("io.github.skeptick.libres:gradle-plugin:1.2.4")
+    }
+}

@@ -28,12 +28,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.kpfu.itis.quiz.android.R
-import ru.kpfu.itis.quiz.android.feature.questions.presentation.model.QuestionData
+import ru.kpfu.itis.quiz.feature.questions.presentation.questions.model.QuestionDataUi
 
 @Composable
 fun QuestionPage(
     modifier: Modifier = Modifier,
-    question: QuestionData,
+    question: QuestionDataUi,
     onAnswerSelected: (Int) -> Unit,
     additionalBottomText: String = "",
     onAdditionalBottomTextClick: (() -> Unit)? = null

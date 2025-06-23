@@ -4,6 +4,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
+import ru.kpfu.itis.quiz.Res
+import ru.kpfu.itis.quiz.core.util.validatePassword
+import ru.kpfu.itis.quiz.core.util.validateUsername
 import ru.kpfu.itis.quiz.feature.authentication.domain.usecase.GetSignedInUserUseCase
 import ru.kpfu.itis.quiz.feature.authentication.domain.usecase.RegisterUserUseCase
 import ru.kpfu.itis.quiz.feature.authentication.presentation.register.mvi.RegisterScreenIntent
@@ -42,14 +45,22 @@ class RegisterViewModel(
                 confirmPassword = intent.confirmPassword
             )
 
-            reduce { state.copy(username = intent.username, isLoading = false) }
-            postSideEffect(RegisterScreenSideEffect.NavigateToMainMenu)
+            if (isSuccess) {
+                reduce { state.copy(username = intent.username, isLoading = false) }
+                postSideEffect(RegisterScreenSideEffect.NavigateToMainMenu)
+            } else {
+                reduce { state.copy(username = "", isLoading = false) }
+                postSideEffect(RegisterScreenSideEffect.ShowError(
+                    title = Res.string.register_fail,
+                    message = Res.string.register_fail_invalid
+                ))
+            }
         } catch (ex: Throwable) {
             reduce { state.copy(username = "", isLoading = false) }
-            /*postSideEffect(RegisterScreenSideEffect.ShowError(
-                title = resourceManager.getString(R.string.registration_failed),
-                message = ex.message ?: resourceManager.getString(R.string.default_error_msg))
-            )*/
+            postSideEffect(RegisterScreenSideEffect.ShowError(
+                title = Res.string.register_fail,
+                message = ex.message ?: Res.string.default_error_msg
+            ))
         }
     }
 
@@ -62,28 +73,24 @@ class RegisterViewModel(
             }
         } catch (ex: Throwable) {
             reduce { state.copy(username = "") }
-            /*postSideEffect(RegisterScreenSideEffect.ShowError(
-                title = resourceManager.getString(R.string.sign_in_failed),
-                message = ex.message ?: resourceManager.getString(R.string.default_error_msg))
-            )*/
         }
     }
 
     private fun validatePassword(intent: RegisterScreenIntent.ValidatePassword) = intent {
-        /*val result = if (passwordValidator.validate(password)) null
-        else resourceManager.getString(ru.kpfu.itis.paramonov.core.R.string.weak_password_msg)
-        reduce { state.copy(passwordError = result) }*/
+        reduce { state.copy(
+            passwordError = if (validatePassword(intent.password)) null else Res.string.password_requirements
+        ) }
     }
 
     private fun validateConfirmPassword(intent: RegisterScreenIntent.ValidateConfirmPassword) = intent {
-        /*val result = if (passwordValidator.validate(password)) null
-        else resourceManager.getString(ru.kpfu.itis.paramonov.core.R.string.weak_password_msg)
-        reduce { state.copy(confirmPasswordError = result) }*/
+        reduce { state.copy(
+            confirmPasswordError = if (validatePassword(intent.password)) null else Res.string.password_requirements
+        ) }
     }
 
     private fun validateUsername(intent: RegisterScreenIntent.ValidateUsername) = intent {
-        /*val result = if (usernameValidator.validate(username)) null
-        else resourceManager.getString(ru.kpfu.itis.paramonov.core.R.string.invalid_username_msg)
-        reduce { state.copy(usernameError = result) }*/
+        reduce { state.copy(
+            usernameError = if (validateUsername(intent.username)) null else Res.string.username_requirements
+        ) }
     }
 }

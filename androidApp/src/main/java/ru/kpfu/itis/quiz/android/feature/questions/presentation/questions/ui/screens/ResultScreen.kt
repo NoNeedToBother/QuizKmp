@@ -26,8 +26,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.kpfu.itis.quiz.android.R
-import ru.kpfu.itis.quiz.android.feature.questions.presentation.questions.model.ResultDataUiModel
-import ru.kpfu.itis.quiz.android.feature.questions.presentation.questions.model.ResultScoreUiModel
+import ru.kpfu.itis.quiz.feature.questions.presentation.questions.model.ResultData
+import ru.kpfu.itis.quiz.feature.questions.presentation.questions.model.ResultScore
 
 private const val F_MAX_RATIO = 0.3
 private const val E_MAX_RATIO = 0.4
@@ -41,7 +41,7 @@ private const val PLUS_GRADATION_MIN_RATION = 0.75
 @Composable
 fun ResultScreen(
     modifier: Modifier = Modifier,
-    resultData: ResultDataUiModel,
+    resultData: ResultData,
     maxScore: Double,
 ) {
     val resultScoreUiModel by remember(resultData.score, maxScore) {
@@ -99,20 +99,20 @@ private fun ResultText(text: String) {
 }
 
 @Composable
-fun ScoreImage(resultScoreUiModel: ResultScoreUiModel, modifier: Modifier = Modifier) {
+fun ScoreImage(resultScoreUiModel: ResultScore, modifier: Modifier = Modifier) {
     val scoreDrawable = when (resultScoreUiModel) {
-        ResultScoreUiModel.A -> R.drawable.a
-        ResultScoreUiModel.B -> R.drawable.b
-        ResultScoreUiModel.C -> R.drawable.c
-        ResultScoreUiModel.D -> R.drawable.d
-        ResultScoreUiModel.E -> R.drawable.e
-        ResultScoreUiModel.F -> R.drawable.f
+        ResultScore.A -> R.drawable.a
+        ResultScore.B -> R.drawable.b
+        ResultScore.C -> R.drawable.c
+        ResultScore.D -> R.drawable.d
+        ResultScore.E -> R.drawable.e
+        ResultScore.F -> R.drawable.f
     }
 
     val gradationDrawable = when (resultScoreUiModel.gradation) {
-        ResultScoreUiModel.GradationUiModel.PLUS -> R.drawable.plus
-        ResultScoreUiModel.GradationUiModel.MINUS -> R.drawable.minus
-        ResultScoreUiModel.GradationUiModel.DEFAULT -> null
+        ResultScore.Gradation.PLUS -> R.drawable.plus
+        ResultScore.Gradation.MINUS -> R.drawable.minus
+        ResultScore.Gradation.DEFAULT -> null
     }
 
     Box(
@@ -137,39 +137,39 @@ fun ScoreImage(resultScoreUiModel: ResultScoreUiModel, modifier: Modifier = Modi
     }
 }
 
-private fun getMaxResultScoreUiModel(score: Double, maxScore: Double): ResultScoreUiModel {
+private fun getMaxResultScoreUiModel(score: Double, maxScore: Double): ResultScore {
     val ratio = score / maxScore
     val model = when {
-        ratio <= F_MAX_RATIO -> ResultScoreUiModel.F.apply {
+        ratio <= F_MAX_RATIO -> ResultScore.F.apply {
             gradation = getGradation(0.0, F_MAX_RATIO, ratio)
         }
-        ratio <= E_MAX_RATIO -> ResultScoreUiModel.E.apply {
+        ratio <= E_MAX_RATIO -> ResultScore.E.apply {
             gradation = getGradation(F_MAX_RATIO, E_MAX_RATIO, ratio)
         }
-        ratio <= D_MAX_RATIO -> ResultScoreUiModel.D.apply {
+        ratio <= D_MAX_RATIO -> ResultScore.D.apply {
             gradation = getGradation(E_MAX_RATIO, D_MAX_RATIO, ratio)
         }
-        ratio <= C_MAX_RATIO -> ResultScoreUiModel.C.apply {
+        ratio <= C_MAX_RATIO -> ResultScore.C.apply {
             gradation = getGradation(D_MAX_RATIO, C_MAX_RATIO, ratio)
         }
-        ratio <= B_MAX_RATIO -> ResultScoreUiModel.B.apply {
+        ratio <= B_MAX_RATIO -> ResultScore.B.apply {
             gradation = getGradation(C_MAX_RATIO, B_MAX_RATIO, ratio)
         }
-        else -> ResultScoreUiModel.A.apply {
+        else -> ResultScore.A.apply {
             gradation = getGradation(B_MAX_RATIO, 1.0, ratio)
         }
     }
     return model
 }
 
-private fun getGradation(minValue: Double, maxValue: Double, value: Double): ResultScoreUiModel.GradationUiModel {
+private fun getGradation(minValue: Double, maxValue: Double, value: Double): ResultScore.Gradation {
     val absoluteDelta = maxValue - minValue
     val delta = value - minValue
     return (delta / absoluteDelta).let {
         when {
-            it <= MINUS_GRADATION_MAX_RATIO -> ResultScoreUiModel.GradationUiModel.MINUS
-            it >= PLUS_GRADATION_MIN_RATION -> ResultScoreUiModel.GradationUiModel.PLUS
-            else -> ResultScoreUiModel.GradationUiModel.DEFAULT
+            it <= MINUS_GRADATION_MAX_RATIO -> ResultScore.Gradation.MINUS
+            it >= PLUS_GRADATION_MIN_RATION -> ResultScore.Gradation.PLUS
+            else -> ResultScore.Gradation.DEFAULT
         }
     }
 }

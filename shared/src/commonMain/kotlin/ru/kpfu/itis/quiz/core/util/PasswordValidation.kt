@@ -13,5 +13,3 @@ fun validatePassword(password: String): Boolean {
     }
     return hasDigit && hasUpperCase && hasLowerCase && (password.length >= MIN_PASSWORD_LENGTH)
 }
-
-const val passwordRequirements = ""

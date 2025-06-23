@@ -54,9 +54,6 @@
     <string name="register">Register</string>
     <string name="confirm_password">Confirm password</string>
     <string name="enter_email">Enter email</string>
-    <string name="registration_failed">Registration failed</string>
-    <string name="sign_in_failed">Signing in failed</string>
-    <string name="default_error_msg">Something wrong happened…</string>
     <string name="welcome_user">Welcome, %s</string>
     <string name="welcome_back_user">Welcome back, %s</string>
 

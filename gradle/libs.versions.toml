@@ -120,6 +120,7 @@ kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", versio
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 room = { id = "androidx.room", version.ref = "room" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+#libres = { id = "io.github.skeptick.libres" }
 googleService = { id = "com.google.gms.google-services", version.ref = "googleService" }
 crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "crashlytics" }
 

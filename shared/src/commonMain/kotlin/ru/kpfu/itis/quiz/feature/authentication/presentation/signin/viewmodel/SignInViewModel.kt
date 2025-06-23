@@ -4,8 +4,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
-import ru.kpfu.itis.quiz.core.util.passwordRequirements
+import ru.kpfu.itis.quiz.Res
 import ru.kpfu.itis.quiz.core.util.validatePassword
+import ru.kpfu.itis.quiz.core.util.validateUsername
 import ru.kpfu.itis.quiz.feature.authentication.domain.usecase.GetSignedInUserUseCase
 import ru.kpfu.itis.quiz.feature.authentication.domain.usecase.SignInUserUseCase
 import ru.kpfu.itis.quiz.feature.authentication.presentation.signin.mvi.SignInScreenIntent
@@ -44,15 +45,18 @@ class SignInViewModel(
                 postSideEffect(SignInScreenSideEffect.NavigateToMainMenu)
             } else {
                 reduce { state.copy(isLoading = false) }
+                postSideEffect(
+                    SignInScreenSideEffect.ShowError(
+                        title = Res.string.sign_in_fail,
+                        message = Res.string.sign_in_fail_invalid
+                    ))
             }
         } catch (ex: Throwable) {
             reduce { state.copy(username = "", isLoading = false) }
             postSideEffect(
                 SignInScreenSideEffect.ShowError(
-                title = "Sign In failed",
-                message = ex.message ?: "Something bad happened..."
-                //title = resourceManager.getString(R.string.sign_in_failed),
-                //message = ex.message ?: resourceManager.getString(R.string.default_error_msg)
+                title = Res.string.sign_in_fail,
+                message = ex.message ?: Res.string.default_error_msg
             ))
         }
     }
@@ -70,13 +74,14 @@ class SignInViewModel(
     }
 
     private fun validatePassword(intent: SignInScreenIntent.ValidatePassword) = intent {
-        val result: String? = if (validatePassword(intent.password)) null else passwordRequirements
-        reduce { state.copy(passwordError = result) }
+        reduce { state.copy(
+            passwordError = if (validatePassword(intent.password)) null else Res.string.password_requirements
+        ) }
     }
 
     private fun validateUsername(intent: SignInScreenIntent.ValidateUsername) = intent {
-        //val result = if (email.contains("@")) null
-        //else resourceManager.getString(ru.kpfu.itis.paramonov.core.R.string.invalid_email)
-        //reduce { state.copy(emailError = result) }
+        reduce { state.copy(
+            usernameError = if (validateUsername(intent.username)) null else Res.string.username_requirements
+        ) }
     }
 }

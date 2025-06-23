@@ -1,7 +1,7 @@
 package ru.kpfu.itis.quiz.android.feature.leaderboard.presentation.mvi
 
+import ru.kpfu.itis.quiz.core.model.QuestionSettings
 import ru.kpfu.itis.quiz.core.model.Result
-import ru.kpfu.itis.quiz.android.feature.questions.presentation.model.QuestionSettings
 
 data class LeaderboardsScreenState(
     val results: List<Result> = emptyList(),
