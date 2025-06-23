@@ -37,6 +37,14 @@
         <item>Expert</item>
     </string-array>
 
+    <!-- main -->
+    <string name="begin">Begin</string>
+    <string name="question_settings">Question settings</string>
+    <string name="profile">Profile</string>
+    <string name="main_menu">Main menu</string>
+    <string name="leaderboards">Leaderboards</string>
+    <string name="search_users">Search users</string>
+
     <!-- authentication -->
     <string name="enter_username">Enter username</string>
     <string name="enter_password">Enter password</string>
@@ -46,9 +54,6 @@
     <string name="register">Register</string>
     <string name="confirm_password">Confirm password</string>
     <string name="enter_email">Enter email</string>
-    <string name="registration_failed">Registration failed</string>
-    <string name="sign_in_failed">Signing in failed</string>
-    <string name="default_error_msg">Something wrong happened…</string>
     <string name="welcome_user">Welcome, %s</string>
     <string name="welcome_back_user">Welcome back, %s</string>
 
@@ -104,6 +109,5 @@
     <string name="save_settings_fail">Failed to save settings</string>
 
     <!-- users -->
-    <string name="search_users">Search users</string>
     <string name="search_users_fail">Failed to search users</string>
 </resources>

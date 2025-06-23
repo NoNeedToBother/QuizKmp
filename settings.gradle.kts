@@ -17,4 +17,3 @@ dependencyResolutionManagement {
 rootProject.name = "QuizKmp"
 include(":androidApp")
 include(":shared")
-include(":shared:database")

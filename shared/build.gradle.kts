@@ -3,6 +3,10 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.kotlinSerialization)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.room)
+    id("io.github.skeptick.libres")
 }
 
 kotlin {
@@ -10,7 +14,7 @@ kotlin {
         compilations.all {
             compileTaskProvider.configure {
                 compilerOptions {
-                    jvmTarget.set(JvmTarget.JVM_1_8)
+                    jvmTarget.set(JvmTarget.JVM_17)
                 }
             }
         }
@@ -29,7 +33,44 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            //put your multiplatform dependencies here
+            implementation(libs.bundles.ktorClientCommon)
+            implementation(libs.kotlinx.serialization.core)
+            implementation(libs.kotlinx.serialization.json)
+            implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.kotlinx.datetime)
+
+            implementation(libs.cryptography.core)
+            implementation(libs.room.runtime)
+            implementation(libs.bundles.sqlite)
+            implementation(libs.multiplatform.settings)
+            implementation(libs.multiplatform.settings.serialization)
+
+            implementation(libs.bundles.koin.common)
+
+            implementation(libs.androidx.lifecycle.viewmodel)
+            implementation(libs.mvi.orbit.core)
+            implementation(libs.mvi.orbit.viewmodel)
+        }
+        androidMain.dependencies {
+            implementation(libs.ktor.client.okhttp)
+            implementation(libs.okhttp3.logging.interceptor)
+            implementation(libs.cryptography.android)
+
+            /*implementation(libs.compose.ui)
+            implementation(libs.compose.ui.tooling.preview)
+            implementation(libs.compose.ui.tooling)
+            implementation(libs.compose.material3)
+            implementation(libs.compose.foundation)
+
+            implementation(libs.androidx.lifecycle.runtime)
+            implementation(libs.androidx.lifecycle.runtime.compose)
+            implementation(libs.androidx.lifecycle.viewmodel.compose)*/
+
+            //implementation(libs.coil)
+        }
+        iosMain.dependencies {
+            implementation(libs.ktor.client.ios)
+            implementation(libs.cryptography.ios)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -44,7 +85,18 @@ android {
         minSdk = 26
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
+}
+
+room {
+    schemaDirectory("$projectDir/schemas")
+}
+
+dependencies {
+    add("kspAndroid", libs.room.compiler)
+    add("kspIosSimulatorArm64", libs.room.compiler)
+    add("kspIosX64", libs.room.compiler)
+    add("kspIosArm64", libs.room.compiler)
 }
