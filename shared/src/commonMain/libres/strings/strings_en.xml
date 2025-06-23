@@ -2,9 +2,9 @@
 <resources>
     <!-- common -->
     <string name="user_not_present">No user currently logged in, try sign in again</string>
+    <string name="default_error_msg">Error occurred</string>
 
     <!-- auth -->
-    <string name="default_error_msg">Error occurred</string>
     <string name="sign_in_fail">Signing in failed</string>
     <string name="sign_in_fail_invalid">Cannot sign in, provide valid credentials</string>
     <string name="register_fail">Registration failed</string>
@@ -22,5 +22,10 @@
     <string name="no_results">Sorry, there are not enough questions for your settings, try other settings</string>
     <string name="no_connection">No connection, try again later</string>
 
-    <!-- -->
+    <!-- users -->
+    <string name="search_users_fail">Failed to search users</string>
+
+    <!-- leaderboard -->
+    <string name="get_results_fail">Failed to get leaderboard</string>
+
 </resources>

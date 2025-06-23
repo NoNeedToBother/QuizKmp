@@ -17,9 +17,12 @@ interface UserDao {
     @Update
     suspend fun update(user: UserEntity)
 
+    @Query("select * from users where username like :query limit :limit offset :offset")
+    fun getByQueryNameWithPaging(query: String, limit: Int, offset: Int): List<UserEntity>
+
     @Query("select * from users")
     @Transaction
-    fun getWithResults(): List<UserWithResults>
+    fun getAllWithResults(): List<UserWithResults>
 
     @Query("select * from users where username=:username and password=:password")
     fun getByUsernameAndPassword(username: String, password: String): UserEntity?

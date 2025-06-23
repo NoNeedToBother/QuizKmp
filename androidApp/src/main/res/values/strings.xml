@@ -64,6 +64,26 @@
     <string name="time_with_min">Time: %02dm %02ds</string>
     <string name="time">Time: %02ds</string>
     <string name="any_settings_item">Any</string>
+    <string-array name="leaderboard_difficulties">
+        <item>Any</item>
+        <item>Easy</item>
+        <item>Medium</item>
+        <item>Hard</item>
+    </string-array>
+
+    <string-array name="leaderboard_categories">
+        <item>Any</item>
+        <item>General</item>
+        <item>Book</item>
+        <item>Film</item>
+        <item>Music</item>
+        <item>TV</item>
+        <item>Video games</item>
+        <item>Sports</item>
+        <item>Geography</item>
+        <item>History</item>
+        <item>Animals</item>
+    </string-array>
 
     <!-- profiles -->
     <string name="incorrect_user_data">Failed to get user data, try to sign in again</string>

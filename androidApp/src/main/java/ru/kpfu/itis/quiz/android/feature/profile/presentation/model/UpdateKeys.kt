@@ -1,4 +1,4 @@
-package ru.kpfu.itis.paramonov.profiles.api.model
+package ru.kpfu.itis.quiz.android.feature.profile.presentation.model
 
 object UpdateKeys {
     const val UPDATE_USERNAME_KEY = "username"

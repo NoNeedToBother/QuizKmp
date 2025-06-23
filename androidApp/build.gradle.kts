@@ -49,6 +49,8 @@ dependencies {
     implementation(libs.androidx.animation.graphics.android)
     implementation(libs.androidx.compose.navigation)
 
+    implementation(libs.bundles.paging.multiplatform)
+
     implementation(libs.kotlinx.datetime)
 
     implementation(libs.mvi.orbit.compose)

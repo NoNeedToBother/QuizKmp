@@ -42,6 +42,7 @@ kotlin {
             implementation(libs.cryptography.core)
             implementation(libs.room.runtime)
             implementation(libs.bundles.sqlite)
+            implementation(libs.bundles.paging.multiplatform)
             implementation(libs.multiplatform.settings)
             implementation(libs.multiplatform.settings.serialization)
 
@@ -55,18 +56,6 @@ kotlin {
             implementation(libs.ktor.client.okhttp)
             implementation(libs.okhttp3.logging.interceptor)
             implementation(libs.cryptography.android)
-
-            /*implementation(libs.compose.ui)
-            implementation(libs.compose.ui.tooling.preview)
-            implementation(libs.compose.ui.tooling)
-            implementation(libs.compose.material3)
-            implementation(libs.compose.foundation)
-
-            implementation(libs.androidx.lifecycle.runtime)
-            implementation(libs.androidx.lifecycle.runtime.compose)
-            implementation(libs.androidx.lifecycle.viewmodel.compose)*/
-
-            //implementation(libs.coil)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.ios)
