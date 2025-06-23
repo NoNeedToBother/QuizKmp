@@ -9,7 +9,9 @@ import ru.kpfu.itis.quiz.core.database.databaseModule
 import ru.kpfu.itis.quiz.core.network.networkModule
 import ru.kpfu.itis.quiz.core.settings.settingsModule
 import ru.kpfu.itis.quiz.feature.authentication.di.authenticationModule
+import ru.kpfu.itis.quiz.feature.leaderboard.di.leaderboardModule
 import ru.kpfu.itis.quiz.feature.questions.di.questionsModule
+import ru.kpfu.itis.quiz.feature.users.di.usersModule
 import ru.kpfu.itis.quiz.platformModule
 
 object CommonKmp {
@@ -27,6 +29,8 @@ object CommonKmp {
                 settingsModule,
                 authenticationModule,
                 questionsModule,
+                usersModule,
+                leaderboardModule,
                 platformModule(),
             )
         }

@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
@@ -15,12 +14,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import ru.kpfu.itis.quiz.android.core.designsystem.components.EmptyResults
+import org.koin.compose.viewmodel.koinViewModel
 import ru.kpfu.itis.quiz.android.core.designsystem.components.ErrorDialog
-import ru.kpfu.itis.quiz.android.feature.users.presentation.mvi.SearchUsersScreenSideEffect
-import ru.kpfu.itis.quiz.android.feature.users.presentation.mvi.SearchUsersScreenState
+import ru.kpfu.itis.quiz.feature.users.presentation.mvi.SearchUsersScreenSideEffect
+import ru.kpfu.itis.quiz.feature.users.presentation.mvi.SearchUsersScreenState
 import ru.kpfu.itis.quiz.android.feature.users.presentation.ui.components.SearchBar
 import ru.kpfu.itis.quiz.android.feature.users.presentation.ui.components.UserList
+import ru.kpfu.itis.quiz.feature.users.presentation.mvi.SearchUsersScreenIntent
+import ru.kpfu.itis.quiz.feature.users.presentation.viewmodel.SearchUsersViewModel
 import java.lang.IllegalStateException
 import java.util.Timer
 import kotlin.concurrent.timerTask
@@ -33,10 +34,9 @@ private const val DEFAULT_LAST_TIME_VALUE = -1L
 
 @Composable
 fun SearchUsersScreen(
-    goToUserScreen: (String) -> Unit
+    goToUserScreen: (Long) -> Unit,
+    viewModel: SearchUsersViewModel = koinViewModel()
 ) {
-    /*//val di = localDI()
-    //val viewModel: SearchUsersViewModel by di.instance()
     val state = viewModel.container.stateFlow.collectAsState()
     val effect = viewModel.container.sideEffectFlow
 
@@ -59,7 +59,7 @@ fun SearchUsersScreen(
 
     var searchQuery by remember { mutableStateOf("") }
     Screen(
-        state = state,
+        state = state.value,
         onUserClick = { id -> goToUserScreen(id) },
         onSearch = {
             searchQuery = it
@@ -74,14 +74,9 @@ fun SearchUsersScreen(
             }
             lastTime = currentTime
             timer.schedule(timerTask {
-                viewModel.searchUsers(it, MAX_USER_AMOUNT, null)
+                viewModel.onIntent(SearchUsersScreenIntent.SearchUsers(searchQuery, MAX_USER_AMOUNT))
             }, MIN_TIME_BETWEEN_REGISTERING)
-            viewModel.searchUsers(it, MAX_USER_AMOUNT, null)
         },
-        loadMore = {
-            val last = state.value.users.last()
-            viewModel.loadNextUsers(searchQuery, MAX_USER_AMOUNT, last.id)
-        }
     )
 
     Box {
@@ -92,15 +87,15 @@ fun SearchUsersScreen(
                 text = it.second
             )
         }
-    }*/
+    }
 }
 
 @Composable
 fun Screen(
-    state: State<SearchUsersScreenState>,
+    state: SearchUsersScreenState,
     onUserClick: (Long) -> Unit,
     onSearch: (String) -> Unit,
-    loadMore: () -> Unit
+    //loadMore: () -> Unit
 ) {
     Column(modifier = Modifier.fillMaxSize().padding(24.dp)) {
         var searchQuery by remember { mutableStateOf("") }
@@ -113,7 +108,12 @@ fun Screen(
             },
         )
 
-        if (state.value.users.isEmpty() && state.value.loadingEnded) {
+        UserList(
+            users = state.users,
+            onUserClick = onUserClick,
+        )
+        //if (state.users.collectAsLazyPagingItems().)
+        /*if (state.users.collectAsLazy() && state.value.loadingEnded) {
             EmptyResults()
         } else {
             UserList(
@@ -121,6 +121,6 @@ fun Screen(
                 onUserClick = onUserClick,
                 shouldLoadMore = { loadMore() }
             )
-        }
+        }*/
     }
 }

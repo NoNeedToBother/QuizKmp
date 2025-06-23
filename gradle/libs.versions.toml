@@ -6,6 +6,7 @@ ksp = "2.0.0-1.0.23"
 
 sqlite = "2.5.2"
 room = "2.7.2"
+paging-multiplatform = "3.3.0-alpha02-0.5.1"
 coil = "3.2.0"
 mviOrbit = "10.0.0"
 serialization = "1.8.1"
@@ -66,6 +67,9 @@ room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
 coil-networking = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coil" }
 
+paging-multiplatform-compose = { module = "app.cash.paging:paging-compose-common", version.ref = "paging-multiplatform" }
+paging-multiplatform-common = { module = "app.cash.paging:paging-common", version.ref = "paging-multiplatform" }
+
 cryptography-core = { module = "dev.whyoleg.cryptography:cryptography-core", version.ref = "cryptography" }
 cryptography-android = { module = "dev.whyoleg.cryptography:cryptography-provider-jdk", version.ref = "cryptography" }
 cryptography-ios = { module = "dev.whyoleg.cryptography:cryptography-provider-apple", version.ref = "cryptography" }
@@ -87,7 +91,6 @@ ktor-client-mock-jvm = { module = "io.ktor:ktor-client-mock-jvm", version.ref = 
 ktor-client-ios = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
 okhttp3-logging-interceptor = "com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.14"
-
 
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
@@ -143,4 +146,8 @@ koin-common = [
     "koin-core",
     "koin-compose",
     "koin-compose-vm"
+]
+paging-multiplatform = [
+    "paging-multiplatform-common",
+    "paging-multiplatform-compose"
 ]

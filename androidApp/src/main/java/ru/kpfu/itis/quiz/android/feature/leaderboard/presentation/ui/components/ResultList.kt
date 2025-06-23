@@ -5,7 +5,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
@@ -15,13 +14,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
+import app.cash.paging.PagingData
+import app.cash.paging.compose.collectAsLazyPagingItems
 import coil3.compose.rememberAsyncImagePainter
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.map
+import coil3.request.ImageRequest
+import coil3.request.placeholder
+import kotlinx.coroutines.flow.Flow
 import ru.kpfu.itis.quiz.core.util.normalizeEnumName
 import ru.kpfu.itis.quiz.android.R
 import ru.kpfu.itis.quiz.core.model.Result
@@ -44,7 +49,16 @@ fun ResultItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
-                painter = rememberAsyncImagePainter(result.user.profilePictureUri),
+                painter = result.user.profilePictureUri.let {
+                    if (it.isEmpty()) painterResource(R.drawable.default_pfp)
+                    else rememberAsyncImagePainter(
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(result.user.profilePictureUri.toUri())
+                            .placeholder(R.drawable.default_pfp)
+                            .build(),
+                        placeholder = painterResource(R.drawable.default_pfp),
+                    )
+                },
                 contentDescription = "Profile Picture",
                 modifier = Modifier
                     .size(48.dp)
@@ -103,30 +117,21 @@ fun ResultItem(
 @Composable
 fun ResultList(
     modifier: Modifier = Modifier,
-    results: List<Result>,
+    results: Flow<PagingData<Result>>,
     onProfileClick: (Long) -> Unit,
-    shouldLoadMore: () -> Unit
 ) {
     val listState = rememberLazyListState()
 
+    val resultPagingItems = results.collectAsLazyPagingItems()
     LazyColumn(
         state = listState,
         modifier = modifier
     ) {
-        items(results) { result ->
-            ResultItem(result = result, onProfileClick = onProfileClick)
-            HorizontalDivider()
-        }
-    }
-
-    LaunchedEffect(listState) {
-        snapshotFlow { listState.layoutInfo.visibleItemsInfo }
-            .map { it.lastOrNull()?.index }
-            .distinctUntilChanged()
-            .collect { lastIndex ->
-                if (lastIndex != null && lastIndex >= results.size - 1) {
-                    shouldLoadMore()
-                }
+        items(count = resultPagingItems.itemCount) { index ->
+            val result = resultPagingItems[index]
+            result?.let {
+                ResultItem(it, onProfileClick)
             }
+        }
     }
 }

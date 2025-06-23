@@ -106,7 +106,7 @@ fun BottomSheetContent(
             .padding(horizontal = 16.dp)
     ) {
         DropdownMenu(
-            suggestions = stringArrayResource(R.array.difficulties).toList(),
+            suggestions = stringArrayResource(R.array.leaderboard_difficulties).toList(),
             label = stringResource(R.string.difficulty),
             modifier = Modifier.align(Alignment.CenterHorizontally).padding(top = 8.dp),
             onChosen = onDifficultyChosen,
@@ -122,7 +122,7 @@ fun BottomSheetContent(
         )
 
         DropdownMenu(
-            suggestions = stringArrayResource(R.array.categories).toList(),
+            suggestions = stringArrayResource(R.array.leaderboard_categories).toList(),
             label = stringResource(R.string.category),
             modifier = Modifier.align(Alignment.CenterHorizontally).padding(top = 8.dp),
             onChosen = onCategoryChosen,
