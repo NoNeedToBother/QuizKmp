@@ -28,4 +28,14 @@
     <!-- leaderboard -->
     <string name="get_results_fail">Failed to get leaderboard</string>
 
+    <!-- profile -->
+    <string name="incorrect_user_data">Failed to get user data, try to sign in again</string>
+    <string name="dialog_incorrect_credentials">Incorrect credentials</string>
+    <string name="save_photo_fail">Failed to save profile picture</string>
+    <string name="dialog_incorrect_user_data">Incorrect user data changes</string>
+    <string name="incorrect_other_user_data">Failed to get user data</string>
+    <string name="no_user">No user was found</string>
+    <string name="logout_unable">Unable to logout</string>
+    <string name="logout_unable_info">Unable to logout, try again later</string>
+
 </resources>

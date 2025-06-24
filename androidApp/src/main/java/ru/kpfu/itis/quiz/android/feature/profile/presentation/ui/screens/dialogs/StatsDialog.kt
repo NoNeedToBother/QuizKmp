@@ -2,11 +2,11 @@ package ru.kpfu.itis.quiz.android.feature.profile.presentation.ui.screens.dialog
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
-import ru.kpfu.itis.quiz.core.model.Result
 import ru.kpfu.itis.quiz.android.R
 import ru.kpfu.itis.quiz.android.feature.profile.presentation.ui.components.DialogWithTitle
 import ru.kpfu.itis.quiz.android.core.designsystem.components.EmptyResults
 import ru.kpfu.itis.quiz.android.core.designsystem.components.Graph
+import ru.kpfu.itis.quiz.feature.profile.domain.model.Result
 
 @Composable
 fun StatsDialog(

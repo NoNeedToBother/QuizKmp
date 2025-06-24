@@ -1,13 +1,13 @@
 package ru.kpfu.itis.quiz.android.feature.profile.presentation.ui.screens
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
-import androidx.compose.runtime.collectAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -16,35 +16,33 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil3.compose.rememberAsyncImagePainter
+import org.koin.compose.viewmodel.koinViewModel
 import ru.kpfu.itis.quiz.android.R
-import ru.kpfu.itis.quiz.core.model.Result
-import ru.kpfu.itis.quiz.android.feature.profile.presentation.ui.screens.dialogs.StatsDialog
-import ru.kpfu.itis.quiz.android.feature.profile.presentation.mvi.OtherUserProfileScreenSideEffect
-import ru.kpfu.itis.quiz.android.feature.profile.presentation.mvi.OtherUserProfileScreenState
-import ru.kpfu.itis.quiz.android.feature.profile.presentation.ui.components.ProfileInfoField
 import ru.kpfu.itis.quiz.android.core.designsystem.components.ErrorDialog
-
-private const val MAX_RESULTS_AMOUNT = 10
+import ru.kpfu.itis.quiz.feature.profile.presentation.mvi.other.OtherUserProfileScreenState
+import ru.kpfu.itis.quiz.android.feature.profile.presentation.ui.components.ProfileInfoField
+import ru.kpfu.itis.quiz.android.feature.profile.presentation.ui.screens.dialogs.StatsDialog
+import ru.kpfu.itis.quiz.feature.profile.presentation.mvi.other.OtherUserProfileScreenIntent
+import ru.kpfu.itis.quiz.feature.profile.presentation.mvi.other.OtherUserProfileScreenSideEffect
+import ru.kpfu.itis.quiz.feature.profile.presentation.viewmodel.OtherUserProfileViewModel
 
 @Composable
 fun OtherUserProfileScreen(
-    userId: Long
+    userId: Long,
+    viewModel: OtherUserProfileViewModel = koinViewModel()
 ) {
-    /*val di = localDI()
-    val viewModel: OtherUserProfileViewModel by di.instance()
     val state = viewModel.container.stateFlow.collectAsState()
     val effect = viewModel.container.sideEffectFlow
 
-    var results by remember { mutableStateOf<List<Result>?>(null) }
     var error by remember { mutableStateOf<Pair<String, String>?>(null) }
 
+    var showStatsDialog by remember { mutableStateOf(false) }
+
     LaunchedEffect(null) {
-        viewModel.getUser(userId)
-        viewModel.checkFriendStatus(userId)
+        viewModel.onIntent(OtherUserProfileScreenIntent.GetUser(userId))
 
         effect.collect {
             when (it) {
@@ -54,8 +52,6 @@ fun OtherUserProfileScreen(
 
                     error = errorTitle to errorMessage
                 }
-                is OtherUserProfileScreenSideEffect.ResultsReceived ->
-                    results = it.results
             }
         }
     }
@@ -63,15 +59,12 @@ fun OtherUserProfileScreen(
     ScreenContent(
         modifier = Modifier.fillMaxSize(),
         state = state,
-        onGetResultsClicked = { viewModel.getLastResults(MAX_RESULTS_AMOUNT, userId) },
-        onAddFriendClick = { viewModel.sendFriendRequest(userId) }
+        onGetResultsClicked = { showStatsDialog = true },
     ) {
-        results?.let {
+        if (showStatsDialog) {
             StatsDialog(
-                results = it,
-                onDismiss = {
-                    results = null
-                }
+                results = state.value.results,
+                onDismiss = { showStatsDialog = false }
             )
         }
     }
@@ -84,7 +77,7 @@ fun OtherUserProfileScreen(
                 text = it.second
             )
         }
-    }*/
+    }
 }
 
 @Composable

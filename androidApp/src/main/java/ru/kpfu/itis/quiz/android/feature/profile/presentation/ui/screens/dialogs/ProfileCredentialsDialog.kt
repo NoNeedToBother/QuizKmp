@@ -34,7 +34,7 @@ fun CredentialsDialog(
     var confirmPassword by remember { mutableStateOf("") }
 
     DialogWithTitle(
-        title = stringResource(R.string.confirm_credentials),
+        title = stringResource(R.string.change_credentials),
         onDismiss = onDismiss
     ) {
         Column(

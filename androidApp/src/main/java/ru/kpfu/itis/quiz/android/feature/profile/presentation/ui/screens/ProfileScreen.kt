@@ -1,5 +1,6 @@
 package ru.kpfu.itis.quiz.android.feature.profile.presentation.ui.screens
 
+import android.content.Context
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
@@ -30,7 +31,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -41,53 +41,50 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import coil3.compose.rememberAsyncImagePainter
+import coil3.request.ImageRequest
+import coil3.request.placeholder
+import org.koin.compose.viewmodel.koinViewModel
 import ru.kpfu.itis.quiz.android.R
-import ru.kpfu.itis.quiz.android.feature.profile.presentation.mvi.ProfileScreenSideEffect
-import ru.kpfu.itis.quiz.android.feature.profile.presentation.mvi.ProfileScreenState
+import ru.kpfu.itis.quiz.android.core.designsystem.components.ErrorDialog
+import ru.kpfu.itis.quiz.feature.profile.presentation.mvi.profile.ProfileScreenState
 import ru.kpfu.itis.quiz.android.feature.profile.presentation.ui.components.ProfileInfoField
 import ru.kpfu.itis.quiz.android.feature.profile.presentation.ui.screens.dialogs.CredentialsDialog
-import ru.kpfu.itis.quiz.android.feature.profile.presentation.ui.screens.dialogs.INFO_UPDATE_KEY
 import ru.kpfu.itis.quiz.android.feature.profile.presentation.ui.screens.dialogs.ProfilePictureDialog
 import ru.kpfu.itis.quiz.android.feature.profile.presentation.ui.screens.dialogs.ProfileSettingsDialog
 import ru.kpfu.itis.quiz.android.feature.profile.presentation.ui.screens.dialogs.StatsDialog
-import ru.kpfu.itis.quiz.android.feature.profile.presentation.ui.screens.dialogs.USERNAME_UPDATE_KEY
-import ru.kpfu.itis.quiz.android.core.designsystem.components.ErrorDialog
-
-private const val MAX_RESULTS_AMOUNT = 10
+import ru.kpfu.itis.quiz.feature.profile.presentation.mvi.profile.ProfileScreenIntent
+import ru.kpfu.itis.quiz.feature.profile.presentation.mvi.profile.ProfileScreenSideEffect
+import ru.kpfu.itis.quiz.feature.profile.presentation.viewmodel.ProfileViewModel
+import java.io.File
+import java.io.FileOutputStream
 
 @Composable
 fun ProfileScreen(
-    goToSignInScreen: () -> Unit
+    goToSignInScreen: () -> Unit,
+    viewModel: ProfileViewModel = koinViewModel()
 ) {
-    /*val di = localDI()
-    val viewModel: ProfileViewModel by di.instance()
-    val resourceManager: ResourceManager by di.instance()
 
     val state = viewModel.container.stateFlow.collectAsState()
     val effect = viewModel.container.sideEffectFlow
 
-    var results by remember { mutableStateOf<List<ResultUiModel>?>(null) }
-    var requests by remember { mutableStateOf<List<UserModel>?>(null) }
-    var profilePictureUri by remember { mutableStateOf<Uri?>(null) }
+    var profilePictureUri by remember { mutableStateOf<String?>(null) }
     var showProfileSettingsDialog by remember { mutableStateOf(false) }
-    var showConfirmCredentialsDialog by remember { mutableStateOf(false) }
     var showCredentialsDialog by remember { mutableStateOf(false) }
+    var showStatsDialog by remember { mutableStateOf(false) }
 
     var error by remember { mutableStateOf<Pair<String, String>?>(null) }
 
     LaunchedEffect(null) {
-        viewModel.getCurrentUser()
-        viewModel.subscribeToProfileUpdates()
+        viewModel.onIntent(ProfileScreenIntent.GetCurrent)
 
         effect.collect {
             when(it) {
-                ProfileScreenSideEffect.CredentialsConfirmed -> { showCredentialsDialog = true }
-                is ProfileScreenSideEffect.FriendRequestsReceived -> { requests = it.requests }
                 ProfileScreenSideEffect.GoToSignIn -> { goToSignInScreen() }
-                is ProfileScreenSideEffect.ResultsReceived -> { results = it.results }
                 is ProfileScreenSideEffect.ShowError -> {
                     val errorMessage = it.message
                     val errorTitle = it.title
@@ -101,43 +98,41 @@ fun ProfileScreen(
 
     val pickProfilePictureLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia()
-    ) { uri -> uri?.let { viewModel.onProfilePictureChosen(uri) } }
+    ) { uri -> uri?.let { viewModel.onIntent(ProfileScreenIntent.ConfirmProfilePicture(it.toString())) } }
+
+    val context = LocalContext.current
 
     ScreenContent(
         modifier = Modifier.fillMaxSize(),
-        state = state,
+        state = state.value,
         onSubmitPhotoClick = {
             pickProfilePictureLauncher.launch(
                 PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
             )
         },
-        onCheckResultsClick = { viewModel.getLastResults(MAX_RESULTS_AMOUNT) },
-        onCheckRequestsClick = { viewModel.getFriendRequests() },
         onUserSettingsClicked = { showProfileSettingsDialog = true },
-        onChangeCredentialsClicked = { showConfirmCredentialsDialog = true },
-        onLogoutClicked = { viewModel.logout() },
+        onChangeCredentialsClicked = { showCredentialsDialog = true },
+        onLogoutClicked = { viewModel.onIntent(ProfileScreenIntent.Logout) },
+        onCheckResultsClick = { showStatsDialog = true }
     ) {
-        results?.let {
+        if (showStatsDialog) {
             StatsDialog(
-                results = it,
-                onDismiss = {
-                    results = null
-                }
-            )
-        }
-        requests?.let {
-            RequestsDialog(
-                initialRequests = it,
-                onDismiss = { requests = null },
-                onDenyClick = { userId -> viewModel.denyFriendRequest(userId) },
-                onAcceptClick = { userId -> viewModel.acceptFriendRequest(userId) },
+                results = state.value.results,
+                onDismiss = { showStatsDialog = false }
             )
         }
         profilePictureUri?.let {
             ProfilePictureDialog(
-                uri = it,
+                uri = it.toUri(),
                 onPositivePressed = {
-                    viewModel.saveProfilePicture(it)
+                    val savedUri = saveLocalPicture(
+                        context = context,
+                        name = "img_${state.value.user?.username}_${state.value.user?.id}",
+                        uri = it.toUri()
+                    ).buildUpon()
+                        .appendQueryParameter("timestamp", System.currentTimeMillis().toString())
+                        .build()
+                    viewModel.onIntent(ProfileScreenIntent.UpdateProfilePicture(savedUri.toString()))
                     profilePictureUri = null
                 },
                 onDismiss = { profilePictureUri = null }
@@ -147,63 +142,53 @@ fun ProfileScreen(
             ProfileSettingsDialog(
                 onDismiss = {
                     showProfileSettingsDialog = false
-                    viewModel.clearErrors()
+                    viewModel.onIntent(ProfileScreenIntent.ClearErrors)
                 },
                 onSave = { username, info ->
-                    val params = mutableMapOf<String, String>()
-                    username?.let { params.put(USERNAME_UPDATE_KEY, username) }
-                    info?.let { params.put(INFO_UPDATE_KEY, info) }
-                    viewModel.saveUserSettings(params)
+                    viewModel.onIntent(ProfileScreenIntent.UpdateUserInfo(
+                        username = username, info = info
+                    ))
                     showProfileSettingsDialog = false
                 },
-                checkUsername = { viewModel.validateUsername(it) },
+                checkUsername = { viewModel.onIntent(ProfileScreenIntent.ValidateUsername(it)) },
                 usernameError = state.value.usernameError
             )
-        if (showConfirmCredentialsDialog)
-            ConfirmCredentialsDialog(
-                onDismiss = {
-                    showConfirmCredentialsDialog = false
-                    viewModel.clearErrors()
-                },
-                onSave = { email, password ->
-                    if (email != null && password != null)
-                        viewModel.confirmCredentials(email, password)
-                    showConfirmCredentialsDialog = false
-                },
-                checkPassword = { viewModel.validatePassword(it) },
-                checkEmail = { viewModel.validateUsername(it) },
-                passwordError = state.value.passwordError,
-                emailError = state.value.emailError
-            )
-        if (showCredentialsDialog)
+        if (showCredentialsDialog) {
+            val dialogIncorrectCredentialsMsg = stringResource(R.string.dialog_incorrect_credentials)
+            val confirmPasswordNotMatchingMsg = stringResource(R.string.password_confirm_password_not_match)
+            val credentialsChangeFailMsg = stringResource(R.string.credentials_change_failed)
             CredentialsDialog(
                 onDismiss = {
                     showCredentialsDialog = false
-                    viewModel.clearErrors()
+                    viewModel.onIntent(ProfileScreenIntent.ClearErrors)
                 },
-                onSave = { email, password, confirmPassword ->
+                onSave = { password, confirmPassword ->
                     if (password != null && confirmPassword != null) {
-                        if (password == confirmPassword) viewModel.changeCredentials(email, password)
+                        if (password == confirmPassword) viewModel.onIntent(
+                            ProfileScreenIntent.UpdatePassword(
+                                password
+                            )
+                        )
                         else {
-                            error = resourceManager.getString(R.string.dialog_incorrect_credentials) to
-                                    resourceManager.getString(R.string.password_confirm_password_not_match)
+                            error = dialogIncorrectCredentialsMsg to confirmPasswordNotMatchingMsg
                         }
-                    }
-                    else if (password == null && confirmPassword == null) {
-                        viewModel.changeCredentials(email, null)
                     } else {
-                        error = resourceManager.getString(R.string.credentials_change_failed) to
-                                resourceManager.getString(R.string.dialog_incorrect_credentials)
+                        error = credentialsChangeFailMsg to dialogIncorrectCredentialsMsg
                     }
                     showCredentialsDialog = false
                 },
-                checkEmail = { viewModel.validateEmail(it) },
-                checkPassword = { viewModel.validatePassword(it) },
-                checkConfirmPassword = { viewModel.validateConfirmPassword(it) },
-                emailError = state.value.emailError,
+                checkPassword = { viewModel.onIntent(ProfileScreenIntent.ValidatePassword(it)) },
+                checkConfirmPassword = {
+                    viewModel.onIntent(
+                        ProfileScreenIntent.ValidateConfirmPassword(
+                            it
+                        )
+                    )
+                },
                 passwordError = state.value.passwordError,
                 confirmPasswordError = state.value.confirmPasswordError
             )
+        }
         error?.let {
             ErrorDialog(
                 onDismiss = { error = null },
@@ -211,13 +196,13 @@ fun ProfileScreen(
                 text = it.second
             )
         }
-    }*/
+    }
 }
 
 @Composable
 fun ScreenContent(
     modifier: Modifier = Modifier,
-    state: State<ProfileScreenState>,
+    state: ProfileScreenState,
     onSubmitPhotoClick: () -> Unit,
     onCheckResultsClick: () -> Unit,
     onUserSettingsClicked: () -> Unit,
@@ -230,7 +215,7 @@ fun ScreenContent(
             modifier = Modifier
                 .align(Alignment.TopEnd)
                 .padding(8.dp),
-            processingCredentials = state.value.processingCredentials,
+            processingCredentials = state.processingCredentials,
             onUserSettingsClicked = onUserSettingsClicked,
             onLogoutClicked = onLogoutClicked,
             onChangeCredentialsClicked = onChangeCredentialsClicked
@@ -242,22 +227,22 @@ fun ScreenContent(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             ProfileImage(
-                imageUrl = state.value.user?.profilePictureUri,
+                uri = state.user?.profilePictureUri,
                 onSubmitPhotoClick = onSubmitPhotoClick
             )
             ProfileInfoField(
                 modifier = Modifier.padding(PaddingValues(top = 12.dp, start = 80.dp, end = 80.dp)),
                 label = stringResource(R.string.username),
-                value = state.value.user?.username ?: ""
+                value = state.user?.username ?: ""
             )
             ProfileInfoField(
                 modifier = Modifier.padding(PaddingValues(top = 12.dp, start = 80.dp, end = 80.dp)),
                 label = stringResource(R.string.info),
-                value = state.value.user?.info ?: ""
+                value = state.user?.info ?: ""
             )
             ProfileInfoField(
                 modifier = Modifier.padding(PaddingValues(top = 12.dp, start = 80.dp, end = 80.dp)),
-                label = stringResource(R.string.registration_date, state.value.user?.dateRegistered ?: ""),
+                label = stringResource(R.string.registration_date, state.user?.dateRegistered ?: ""),
                 value = ""
             )
 
@@ -283,12 +268,17 @@ fun ScreenContent(
 @Composable
 fun ProfileImage(
     modifier: Modifier = Modifier,
-    imageUrl: String?,
+    uri: String?,
     onSubmitPhotoClick: () -> Unit
 ) {
     Box(modifier = modifier.size(220.dp)) {
         Image(
-            painter = rememberAsyncImagePainter(imageUrl),
+            painter = rememberAsyncImagePainter(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(uri?.toUri())
+                    .placeholder(R.drawable.default_pfp)
+                    .build(),
+            ),
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier
@@ -369,4 +359,18 @@ fun SettingsMenu(
             )
         }
     }
+}
+
+private fun saveLocalPicture(context: Context, name: String, uri: Uri): Uri {
+    val contentResolver = context.contentResolver
+    val fileName = "${name}.jpg"
+    val outputFile = File(context.filesDir, fileName)
+
+    contentResolver.openInputStream(uri)?.use { input ->
+        FileOutputStream(outputFile).use { output ->
+            input.copyTo(output)
+        }
+    }
+
+    return Uri.fromFile(outputFile)
 }

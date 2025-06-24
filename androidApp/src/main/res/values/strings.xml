@@ -53,14 +53,11 @@
     <string name="go_to_sign_in">Go to sign in</string>
     <string name="register">Register</string>
     <string name="confirm_password">Confirm password</string>
-    <string name="enter_email">Enter email</string>
     <string name="welcome_user">Welcome, %s</string>
     <string name="welcome_back_user">Welcome back, %s</string>
 
     <!-- leaderboards -->
-    <string name="global_leaderboard">Leaderboards</string>
     <string name="score_default">Score: %.3f</string>
-    <string name="get_results_fail">Failed to get leaderboard</string>
     <string name="time_with_min">Time: %02dm %02ds</string>
     <string name="time">Time: %02ds</string>
     <string name="any_settings_item">Any</string>
@@ -86,10 +83,6 @@
     </string-array>
 
     <!-- profiles -->
-    <string name="incorrect_user_data">Failed to get user data, try to sign in again</string>
-    <string name="user_data_fail_title">Failed to get data</string>
-    <string name="incorrect_other_user_data">Failed to get user data</string>
-    <string name="get_info_fail">Failed to get information</string>
     <string name="dialog_incorrect_user_data">Incorrect user data changes</string>
     <string name="registration_date">Since %s</string>
     <string name="submit_photo">Submit photo</string>
@@ -100,7 +93,6 @@
     <string name="logout">Logout</string>
     <string name="username">Username</string>
     <string name="info">Info</string>
-    <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="change_credentials">Change credentials</string>
     <string name="confirm_credentials">Confirm credentials to proceed</string>
@@ -108,26 +100,17 @@
     <string name="confirm_dialog_neg">Do not confirm</string>
     <string name="stats">Last results statistics</string>
     <string name="check_stats">Check last results</string>
-    <string name="save_photo_fail">Failed to save profile picture</string>
+    <string name="password_confirm_password_not_match">Password and confirm password fields are not the same</string>
+    <string name="credentials_change_failed">Set correct credentials to change them successfully</string>
+    <string name="dialog_incorrect_credentials">Incorrect credentials</string>
+
 
     <!-- questions -->
-    <string name="get_questions_fail_msg">Could not get questions, try again later</string>
     <string name="question_num">Question: %d/%d</string>
     <string name="clock_time_with_min">Time: %02dm %02ds</string>
     <string name="clock_time">Time: %02ds</string>
     <string name="end">\u2713 End</string>
-    <string name="correct_guess">Correct, keep training!</string>
-    <string name="incorrect_guess">Incorrect, keep guessing!</string>
-    <string name="standard_settings">Standard mode settings</string>
-    <string name="training_settings">Training mode settings</string>
     <string name="results">Results</string>
-    <string name="unsupported_arguments">Unsupported arguments were received</string>
     <string name="res_time">Time: %d</string>
     <string name="res_score">Score: %.3f</string>
-    <string name="user_not_present">Sorry, it seems you are no longer logged in</string>
-    <string name="save_results_fail">Failed to save results</string>
-    <string name="save_settings_fail">Failed to save settings</string>
-
-    <!-- users -->
-    <string name="search_users_fail">Failed to search users</string>
 </resources>
