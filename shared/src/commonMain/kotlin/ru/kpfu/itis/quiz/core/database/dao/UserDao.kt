@@ -33,4 +33,18 @@ interface UserDao {
     @Query("select * from users where signed_in=true")
     fun getSignedInUser(): UserEntity?
 
+    @Query("select * from users where signed_in=true")
+    @Transaction
+    fun getSignedInUserWithResults(): UserWithResults?
+
+    @Query("select * from users where id=:id")
+    @Transaction
+    fun getByIdWithResults(id: Long): UserWithResults?
+
+    @Query("update users set password=:password where id=:id")
+    fun updatePassword(id: Long, password: String)
+
+    @Query("update users set signed_in=false")
+    fun logout()
+
 }

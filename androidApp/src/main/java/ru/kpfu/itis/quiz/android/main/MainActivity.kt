@@ -131,7 +131,7 @@ fun MainScreen(
             composable(
                 route = Routes.UserScreen.route + "/{userId}"
             ) { backStackEntry ->
-                val userId = backStackEntry.arguments?.getLong("userId")
+                val userId = backStackEntry.arguments?.getString("userId")?.toLong()
                 userId?.let { OtherUserProfileScreen(userId = it) }
             }
             composable(Routes.LeaderboardsScreen.route) { LeaderboardsScreen(
