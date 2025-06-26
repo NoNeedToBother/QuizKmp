@@ -9,12 +9,12 @@ import org.orbitmvi.orbit.viewmodel.container
 import ru.kpfu.itis.quiz.Res
 import ru.kpfu.itis.quiz.core.util.KMMTimer
 import ru.kpfu.itis.quiz.core.util.normalizeEnumName
-import ru.kpfu.itis.quiz.feature.questions.domain.model.AnswerData
 import ru.kpfu.itis.quiz.feature.questions.domain.usecase.GetMaxScoreUseCase
 import ru.kpfu.itis.quiz.feature.questions.domain.usecase.GetQuestionSettingsUseCase
 import ru.kpfu.itis.quiz.feature.questions.domain.usecase.GetQuestionsUseCase
 import ru.kpfu.itis.quiz.feature.questions.domain.usecase.SaveResultsUseCase
-import ru.kpfu.itis.quiz.feature.questions.presentation.questions.mapper.mapToUiModel
+import ru.kpfu.itis.quiz.feature.questions.presentation.questions.mapper.mapQuestionsToUiModel
+import ru.kpfu.itis.quiz.feature.questions.presentation.questions.model.AnswerDataUi
 import ru.kpfu.itis.quiz.feature.questions.presentation.questions.model.QuestionDataUi
 import ru.kpfu.itis.quiz.feature.questions.presentation.questions.model.ResultData
 import ru.kpfu.itis.quiz.feature.questions.presentation.questions.mvi.QuestionsScreenIntent
@@ -53,7 +53,7 @@ class QuestionsViewModel(
 
     private fun updateChosenAnswers(intent: QuestionsScreenIntent.UpdateAnswers) = intent {
         val value = state.questions[intent.pos]
-        val answerListCopy = ArrayList<AnswerData>()
+        val answerListCopy = ArrayList<AnswerDataUi>()
         for (answerData in value.answers) {
             answerListCopy.add(answerData.copy())
         }
@@ -75,7 +75,7 @@ class QuestionsViewModel(
 
     private fun getQuestions() = intent {
         try {
-            val questions = mapToUiModel(getQuestionsUseCase.invoke())
+            val questions = mapQuestionsToUiModel(getQuestionsUseCase.invoke())
 
             reduce { state.copy(questions = questions) }
             startClockTicking()

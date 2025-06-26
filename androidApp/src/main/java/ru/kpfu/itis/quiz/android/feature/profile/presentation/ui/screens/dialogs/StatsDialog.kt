@@ -6,7 +6,7 @@ import ru.kpfu.itis.quiz.android.R
 import ru.kpfu.itis.quiz.android.feature.profile.presentation.ui.components.DialogWithTitle
 import ru.kpfu.itis.quiz.android.core.designsystem.components.EmptyResults
 import ru.kpfu.itis.quiz.android.core.designsystem.components.Graph
-import ru.kpfu.itis.quiz.feature.profile.domain.model.Result
+import ru.kpfu.itis.quiz.feature.profile.presentation.model.Result
 
 @Composable
 fun StatsDialog(

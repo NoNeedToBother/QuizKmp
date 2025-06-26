@@ -13,6 +13,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
@@ -72,7 +73,8 @@ fun SettingsBottomSheetWrapper(
             )
         },
         scaffoldState = rememberBottomSheetScaffoldState(bottomSheetState = sheetState),
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth()
+            .background(MaterialTheme.colorScheme.onSurface),
         sheetContainerColor = Color.White,
         sheetDragHandle = {
             IconButton(onClick = { onExpandClick() }, modifier = Modifier.padding(8.dp)) {

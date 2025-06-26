@@ -12,6 +12,8 @@ import ru.kpfu.itis.quiz.feature.profile.domain.usecase.LogoutUseCase
 import ru.kpfu.itis.quiz.feature.profile.domain.usecase.settings.UpdateCredentialsUseCase
 import ru.kpfu.itis.quiz.feature.profile.domain.usecase.settings.UpdateProfilePictureUseCase
 import ru.kpfu.itis.quiz.feature.profile.domain.usecase.settings.UpdateUserInfoUseCase
+import ru.kpfu.itis.quiz.feature.profile.presentation.mapper.mapResult
+import ru.kpfu.itis.quiz.feature.profile.presentation.mapper.mapUser
 import ru.kpfu.itis.quiz.feature.profile.presentation.mvi.profile.ProfileScreenIntent
 import ru.kpfu.itis.quiz.feature.profile.presentation.mvi.profile.ProfileScreenSideEffect
 import ru.kpfu.itis.quiz.feature.profile.presentation.mvi.profile.ProfileScreenState
@@ -51,8 +53,8 @@ class ProfileViewModel(
             val user = getCurrentUserUseCase.invoke()
             if (user != null) {
                 reduce { state.copy(
-                    user = user.user,
-                    results = user.results
+                    user = mapUser(user.user),
+                    results = user.results.map { mapResult(it) }
                 ) }
             } else {
                 postSideEffect(
