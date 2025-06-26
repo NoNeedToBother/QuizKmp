@@ -34,6 +34,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.flow.collectLatest
+import org.koin.android.ext.android.get
 import ru.kpfu.itis.quiz.android.R
 import ru.kpfu.itis.quiz.android.core.designsystem.theme.AppTheme
 import ru.kpfu.itis.quiz.android.feature.auth.presentation.login.SignInScreen
@@ -45,6 +46,8 @@ import ru.kpfu.itis.quiz.android.feature.profile.presentation.ui.screens.Profile
 import ru.kpfu.itis.quiz.android.feature.questions.presentation.questions.ui.screens.QuestionsScreen
 import ru.kpfu.itis.quiz.android.feature.questions.presentation.settings.ui.screens.QuestionSettingsScreen
 import ru.kpfu.itis.quiz.android.feature.users.presentation.ui.screens.SearchUsersScreen
+import ru.kpfu.itis.quiz.core.firebase.FirebaseScreenAnalytics
+import ru.kpfu.itis.quiz.core.firebase.ScreenEvent
 
 data class TopLevelRoute(val name: String, val route: String, val icon: ImageVector)
 
@@ -53,6 +56,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         enableEdgeToEdge()
+
+        val analytics: FirebaseScreenAnalytics = get()
         setContent {
             AppTheme {
                 val topLevelRoutes = listOf(
@@ -75,7 +80,8 @@ class MainActivity : ComponentActivity() {
                 )
 
                 MainScreen(
-                    topLevelRoutes = topLevelRoutes
+                    topLevelRoutes = topLevelRoutes,
+                    analytics = analytics,
                 )
             }
         }
@@ -86,6 +92,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainScreen(
     topLevelRoutes: List<TopLevelRoute>,
+    analytics: FirebaseScreenAnalytics,
 ) {
     val navController = rememberNavController()
 
@@ -93,39 +100,57 @@ fun MainScreen(
         bottomBar = {
             BottomNavigation(
                 navController = navController,
-                topLevelRoutes = topLevelRoutes
+                topLevelRoutes = topLevelRoutes,
+                analytics = analytics,
             )
         }
     ) { padding ->
         NavHost(navController, startDestination = Routes.SignInScreen.route, modifier = Modifier.padding(padding)) {
             composable(Routes.SignInScreen.route) { SignInScreen(
-                goToRegisterScreen = { navController.navigate(Routes.RegisterScreen.route) },
+                goToRegisterScreen = {
+                    analytics.log(ScreenEvent.LAUNCH_REGISTER)
+                    navController.navigate(Routes.RegisterScreen.route)
+                },
                 goToMainMenuScreen = {
                     navController.clearBackStack(Routes.SignInScreen.route)
                     navController.clearBackStack(Routes.RegisterScreen.route)
+                    analytics.log(ScreenEvent.LAUNCH_HOME)
                     navController.navigate(Routes.MainMenuScreen.route)
                 }
             ) }
 
             composable(Routes.RegisterScreen.route) { RegisterScreen(
-                goToSignInScreen = { navController.navigate(Routes.SignInScreen.route) },
+                goToSignInScreen = {
+                    analytics.log(ScreenEvent.LAUNCH_REGISTER)
+                    navController.navigate(Routes.SignInScreen.route)
+                },
                 goToMainMenuScreen = {
                     navController.clearBackStack(Routes.SignInScreen.route)
                     navController.clearBackStack(Routes.RegisterScreen.route)
+                    analytics.log(ScreenEvent.LAUNCH_HOME)
                     navController.navigate(Routes.MainMenuScreen.route)
                 }
             ) }
 
             composable(Routes.MainMenuScreen.route) { MainMenuScreen(
-                goToQuestionsScreen = { navController.navigate(Routes.QuestionsScreen.route) },
-                goToQuestionSettingsScreen = { navController.navigate(Routes.QuestionSettingsScreen.route) }
+                goToQuestionsScreen = {
+                    analytics.log(ScreenEvent.LAUNCH_QUESTIONS)
+                    navController.navigate(Routes.QuestionsScreen.route)
+                },
+                goToQuestionSettingsScreen = {
+                    analytics.log(ScreenEvent.LAUNCH_QUESTION_SETTINGS)
+                    navController.navigate(Routes.QuestionSettingsScreen.route)
+                },
             ) }
 
             composable(Routes.QuestionsScreen.route) { QuestionsScreen() }
             composable(Routes.QuestionSettingsScreen.route) { QuestionSettingsScreen() }
 
             composable(Routes.ProfileScreen.route) { ProfileScreen(
-                goToSignInScreen = { navController.navigate(Routes.SignInScreen.route) }
+                goToSignInScreen = {
+                    analytics.log(ScreenEvent.LAUNCH_SIGN_IN)
+                    navController.navigate(Routes.SignInScreen.route)
+                }
             ) }
 
             composable(
@@ -135,10 +160,16 @@ fun MainScreen(
                 userId?.let { OtherUserProfileScreen(userId = it) }
             }
             composable(Routes.LeaderboardsScreen.route) { LeaderboardsScreen(
-                goToUserScreen = { id -> navController.navigate(Routes.UserScreen.route + "/$id") }
+                goToUserScreen = { id ->
+                    analytics.log(ScreenEvent.LAUNCH_OTHER_USER_PROFILE)
+                    navController.navigate(Routes.UserScreen.route + "/$id")
+                }
             ) }
             composable(Routes.SearchUsersScreen.route) { SearchUsersScreen(
-                goToUserScreen = { id -> navController.navigate(Routes.UserScreen.route + "/$id") }
+                goToUserScreen = { id ->
+                    analytics.log(ScreenEvent.LAUNCH_OTHER_USER_PROFILE)
+                    navController.navigate(Routes.UserScreen.route + "/$id")
+                }
             ) }
         }
     }
@@ -148,7 +179,8 @@ fun MainScreen(
 @Composable
 fun BottomNavigation(
     navController: NavController,
-    topLevelRoutes: List<TopLevelRoute>
+    topLevelRoutes: List<TopLevelRoute>,
+    analytics: FirebaseScreenAnalytics,
 ) {
     var showNavBar by remember { mutableStateOf(false) }
 
@@ -183,6 +215,12 @@ fun BottomNavigation(
                     } == true,
                     onClick = {
                         navController.navigate(topLevelRoute.route) {
+                            when(topLevelRoute.route) {
+                                Routes.ProfileScreen.route -> analytics.log(ScreenEvent.LAUNCH_PROFILE)
+                                Routes.SearchUsersScreen.route -> analytics.log(ScreenEvent.LAUNCH_SEARCH)
+                                Routes.LeaderboardsScreen.route -> analytics.log(ScreenEvent.LAUNCH_LEADERBOARD)
+                                Routes.MainMenuScreen.route -> analytics.log(ScreenEvent.LAUNCH_HOME)
+                            }
                             navController.graph.findStartDestination().route?.let {
                                 popUpTo(it) { saveState = true }
                             }
