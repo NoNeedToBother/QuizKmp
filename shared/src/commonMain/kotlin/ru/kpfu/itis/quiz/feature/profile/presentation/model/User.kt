@@ -1,10 +1,8 @@
-package ru.kpfu.itis.quiz.feature.profile.domain.model
+package ru.kpfu.itis.quiz.feature.profile.presentation.model
 
-data class UserWithResults(
-    val user: User,
-    val results: List<Result>
-)
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class User(
     val id: Long,
     val username: String,

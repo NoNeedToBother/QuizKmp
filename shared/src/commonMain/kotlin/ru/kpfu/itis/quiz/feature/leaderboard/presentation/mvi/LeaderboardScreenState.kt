@@ -5,8 +5,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
-import ru.kpfu.itis.quiz.core.model.Result
 import ru.kpfu.itis.quiz.feature.leaderboard.presentation.model.QuestionSettingsUi
+import ru.kpfu.itis.quiz.feature.leaderboard.presentation.model.Result
 
 @Serializable
 data class LeaderboardScreenState(

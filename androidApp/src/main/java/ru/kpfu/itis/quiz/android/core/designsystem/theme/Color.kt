@@ -1,6 +1,5 @@
 package ru.kpfu.itis.quiz.android.core.designsystem.theme
 
-
 import androidx.compose.ui.graphics.Color
 
 val Purple80 = Color(0xFFD0BCFF)

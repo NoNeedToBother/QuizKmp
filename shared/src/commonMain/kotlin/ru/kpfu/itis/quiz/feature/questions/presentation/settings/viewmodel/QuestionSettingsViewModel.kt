@@ -1,6 +1,5 @@
 package ru.kpfu.itis.quiz.feature.questions.presentation.settings.viewmodel
 
-
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import org.orbitmvi.orbit.ContainerHost
@@ -9,9 +8,10 @@ import ru.kpfu.itis.quiz.core.model.Category
 import ru.kpfu.itis.quiz.core.model.Difficulty
 import ru.kpfu.itis.quiz.core.model.GameMode
 import ru.kpfu.itis.quiz.core.util.toEnumName
-import ru.kpfu.itis.quiz.core.model.QuestionSettings
 import ru.kpfu.itis.quiz.feature.questions.domain.usecase.GetQuestionSettingsUseCase
 import ru.kpfu.itis.quiz.feature.questions.domain.usecase.SaveQuestionSettingsUseCase
+import ru.kpfu.itis.quiz.feature.questions.presentation.settings.mapper.mapQuestionSettings
+import ru.kpfu.itis.quiz.feature.questions.presentation.settings.model.QuestionSettings
 import ru.kpfu.itis.quiz.feature.questions.presentation.settings.mvi.QuestionSettingsScreenIntent
 import ru.kpfu.itis.quiz.feature.questions.presentation.settings.mvi.QuestionSettingsScreenSideEffect
 import ru.kpfu.itis.quiz.feature.questions.presentation.settings.mvi.QuestionSettingsScreenState
@@ -39,7 +39,8 @@ class QuestionSettingsViewModel(
     }
 
     private fun getQuestionSettings() = intent {
-        val questionSettings = getQuestionSettingsUseCase.invoke()
+        val questionSettings =
+            mapQuestionSettings(getQuestionSettingsUseCase.invoke())
         reduce { state.copy(settings = questionSettings) }
     }
 

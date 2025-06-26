@@ -4,7 +4,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
+import androidx.paging.map
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.map
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
 import ru.kpfu.itis.quiz.Res
@@ -15,6 +17,7 @@ import ru.kpfu.itis.quiz.core.util.toEnumName
 import ru.kpfu.itis.quiz.feature.leaderboard.domain.usecase.GetDifficultyUseCase
 import ru.kpfu.itis.quiz.feature.leaderboard.domain.usecase.GetGameModeUseCase
 import ru.kpfu.itis.quiz.feature.leaderboard.domain.usecase.GetLeaderboardUseCase
+import ru.kpfu.itis.quiz.feature.leaderboard.presentation.mapper.mapResult
 import ru.kpfu.itis.quiz.feature.leaderboard.presentation.model.QuestionSettingsUi
 import ru.kpfu.itis.quiz.feature.leaderboard.presentation.mvi.LeaderboardScreenIntent
 import ru.kpfu.itis.quiz.feature.leaderboard.presentation.mvi.LeaderboardScreenSideEffect
@@ -63,6 +66,7 @@ class LeaderboardViewModel(
                 category = settings?.category,
                 limit = intent.limit
             ).flow.cachedIn(viewModelScope)
+                .map { paging -> paging.map { mapResult(it) } }
             reduce { state.copy(results = resultLeaderboard, loadingEnded = true) }
         } catch (ex: Throwable) {
             postSideEffect(LeaderboardScreenSideEffect.ShowError(

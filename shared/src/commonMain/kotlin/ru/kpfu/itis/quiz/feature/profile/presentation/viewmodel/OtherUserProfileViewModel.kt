@@ -6,6 +6,8 @@ import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
 import ru.kpfu.itis.quiz.Res
 import ru.kpfu.itis.quiz.feature.profile.domain.usecase.GetUserUseCase
+import ru.kpfu.itis.quiz.feature.profile.presentation.mapper.mapResult
+import ru.kpfu.itis.quiz.feature.profile.presentation.mapper.mapUser
 import ru.kpfu.itis.quiz.feature.profile.presentation.mvi.other.OtherUserProfileScreenIntent
 import ru.kpfu.itis.quiz.feature.profile.presentation.mvi.other.OtherUserProfileScreenSideEffect
 import ru.kpfu.itis.quiz.feature.profile.presentation.mvi.other.OtherUserProfileScreenState
@@ -31,7 +33,10 @@ class OtherUserProfileViewModel(
         try {
             val user = getUserUseCase.invoke(intent.id)
             if (user != null) {
-                reduce { state.copy(user = user.user, results = user.results) }
+                reduce { state.copy(
+                    user = mapUser(user.user),
+                    results = user.results.map { mapResult(it) }
+                ) }
             } else {
                 postSideEffect(
                     OtherUserProfileScreenSideEffect.ShowError(

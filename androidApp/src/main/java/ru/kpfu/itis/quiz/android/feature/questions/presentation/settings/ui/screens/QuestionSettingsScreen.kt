@@ -26,7 +26,7 @@ import ru.kpfu.itis.quiz.android.R
 import ru.kpfu.itis.quiz.feature.questions.presentation.settings.mvi.QuestionSettingsScreenState
 import ru.kpfu.itis.quiz.android.core.designsystem.components.DropdownMenu
 import ru.kpfu.itis.quiz.android.core.designsystem.components.ErrorDialog
-import ru.kpfu.itis.quiz.core.model.QuestionSettings
+import ru.kpfu.itis.quiz.feature.questions.presentation.settings.model.QuestionSettings
 import ru.kpfu.itis.quiz.feature.questions.presentation.settings.mvi.QuestionSettingsScreenIntent
 import ru.kpfu.itis.quiz.feature.questions.presentation.settings.mvi.QuestionSettingsScreenSideEffect
 import ru.kpfu.itis.quiz.feature.questions.presentation.settings.viewmodel.QuestionSettingsViewModel

@@ -29,7 +29,7 @@ import coil3.request.placeholder
 import kotlinx.coroutines.flow.Flow
 import ru.kpfu.itis.quiz.core.util.normalizeEnumName
 import ru.kpfu.itis.quiz.android.R
-import ru.kpfu.itis.quiz.core.model.Result
+import ru.kpfu.itis.quiz.feature.leaderboard.presentation.model.Result
 
 @Composable
 fun ResultItem(
