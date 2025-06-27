@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -120,7 +121,6 @@ fun ScreenContent(
             state = pagerState,
             modifier = Modifier.fillMaxSize()
         ) { page ->
-            //val configuration = LocalConfiguration.current
             val pageOffset = (pagerState.currentPage - page) + pagerState.currentPageOffsetFraction
             val minScale = 0.8f
 
@@ -179,7 +179,9 @@ fun Time(
     ) {
         Stopwatch(
             time = time,
-            clockSize = 60.dp
+            clockSize = 60.dp,
+            strokeColor = MaterialTheme.colorScheme.onSurface,
+            fillColor = MaterialTheme.colorScheme.tertiary
         )
 
         Text(

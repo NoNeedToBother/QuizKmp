@@ -17,8 +17,8 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.kpfu.itis.quiz.android.R
+import ru.kpfu.itis.quiz.android.core.designsystem.components.Logo
 import ru.kpfu.itis.quiz.android.core.designsystem.theme.StardosFont
-import ru.kpfu.itis.quiz.android.core.designsystem.theme.Typography
 
 @Composable
 fun MainMenuScreen(
@@ -42,12 +42,7 @@ fun ScreenContent(
             .padding(top = 44.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = stringResource(id = R.string.app_name),
-            style = Typography.bodyLarge,
-            fontSize = 92.sp,
-            fontFamily = StardosFont,
-        )
+        Logo()
 
         Spacer(modifier = Modifier.height(32.dp))
         MainMenuTextButton(

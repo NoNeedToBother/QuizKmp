@@ -6,8 +6,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -20,9 +18,7 @@ import androidx.compose.ui.unit.dp
 import ru.kpfu.itis.quiz.android.R
 import ru.kpfu.itis.quiz.android.feature.profile.presentation.ui.components.DialogWithTitle
 import ru.kpfu.itis.quiz.android.core.designsystem.components.InputSection
-
-const val USERNAME_UPDATE_KEY = "username"
-const val INFO_UPDATE_KEY = "info"
+import ru.kpfu.itis.quiz.android.core.designsystem.components.TextButton
 
 @Composable
 fun ProfileSettingsDialog(
@@ -60,21 +56,19 @@ fun ProfileSettingsDialog(
             Row(
                 modifier = Modifier.align(Alignment.End)
             ) {
-                Button(
+                TextButton(
                     onClick = {
                         val resUsername = username.ifEmpty { null }
                         val resInfo = info.ifEmpty { null }
                         onSave(resUsername, resInfo)
-                    }
-                ) {
-                    Text(text = stringResource(R.string.dialog_pos))
-                }
+                    },
+                    text = stringResource(R.string.dialog_pos)
+                )
                 Spacer(modifier = Modifier.width(8.dp))
-                Button(
-                    onClick = onDismiss
-                ) {
-                    Text(text = stringResource(R.string.dialog_neg))
-                }
+                TextButton(
+                    onClick = onDismiss,
+                    text = stringResource(R.string.dialog_neg)
+                )
             }
         }
     }

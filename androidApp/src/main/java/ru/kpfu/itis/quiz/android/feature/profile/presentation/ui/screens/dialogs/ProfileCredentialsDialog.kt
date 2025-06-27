@@ -6,8 +6,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -20,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import ru.kpfu.itis.quiz.android.R
 import ru.kpfu.itis.quiz.android.feature.profile.presentation.ui.components.DialogWithTitle
 import ru.kpfu.itis.quiz.android.core.designsystem.components.PasswordInputSection
+import ru.kpfu.itis.quiz.android.core.designsystem.components.TextButton
 
 @Composable
 fun CredentialsDialog(
@@ -64,23 +63,21 @@ fun CredentialsDialog(
             Row(
                 modifier = Modifier.align(Alignment.End)
             ) {
-                Button(
+                TextButton(
                     onClick = {
                         val resPassword = password.ifEmpty { null }
                         val resConfirmPassword = confirmPassword.ifEmpty { null }
                         onSave(resPassword, resConfirmPassword)
                     },
                     enabled = passwordError == null && password.isNotEmpty() &&
-                            confirmPasswordError == null && confirmPassword.isNotEmpty()
-                ) {
-                    Text(text = stringResource(R.string.dialog_pos))
-                }
+                            confirmPasswordError == null && confirmPassword.isNotEmpty(),
+                    text = stringResource(R.string.dialog_pos),
+                )
                 Spacer(modifier = Modifier.width(8.dp))
-                Button(
-                    onClick = onDismiss
-                ) {
-                    Text(text = stringResource(R.string.dialog_neg))
-                }
+                TextButton(
+                    onClick = onDismiss,
+                    text = stringResource(R.string.dialog_neg),
+                )
             }
         }
     }

@@ -9,26 +9,24 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.BottomSheetScaffold
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SheetValue
-import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import ru.kpfu.itis.quiz.android.R
 import ru.kpfu.itis.quiz.android.core.designsystem.components.DropdownMenu
+import ru.kpfu.itis.quiz.android.core.designsystem.components.TextButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -73,9 +71,8 @@ fun SettingsBottomSheetWrapper(
             )
         },
         scaffoldState = rememberBottomSheetScaffoldState(bottomSheetState = sheetState),
-        modifier = modifier.fillMaxWidth()
-            .background(MaterialTheme.colorScheme.onSurface),
-        sheetContainerColor = Color.White,
+        modifier = modifier.fillMaxWidth(),
+        sheetContainerColor = MaterialTheme.colorScheme.secondaryContainer,
         sheetDragHandle = {
             IconButton(onClick = { onExpandClick() }, modifier = Modifier.padding(8.dp)) {
                 Icon(
@@ -104,7 +101,7 @@ fun BottomSheetContent(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color.White)
+            .background(MaterialTheme.colorScheme.background)
             .padding(horizontal = 16.dp)
     ) {
         DropdownMenu(
@@ -131,14 +128,13 @@ fun BottomSheetContent(
             value = categoryValue
         )
 
-        Button(
+        TextButton(
             onClick = {
                 onExpandClick()
                 onSaveClick()
             },
-            modifier = Modifier.padding(top = 16.dp).align(Alignment.CenterHorizontally)
-        ) {
-            Text(stringResource(R.string.save))
-        }
+            modifier = Modifier.padding(top = 16.dp).align(Alignment.CenterHorizontally),
+            text = stringResource(R.string.save)
+        )
     }
 }

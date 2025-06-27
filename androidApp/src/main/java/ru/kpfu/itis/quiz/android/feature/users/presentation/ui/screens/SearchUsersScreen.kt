@@ -95,7 +95,6 @@ fun Screen(
     state: SearchUsersScreenState,
     onUserClick: (Long) -> Unit,
     onSearch: (String) -> Unit,
-    //loadMore: () -> Unit
 ) {
     Column(modifier = Modifier.fillMaxSize().padding(24.dp)) {
         var searchQuery by remember { mutableStateOf("") }
@@ -112,15 +111,5 @@ fun Screen(
             users = state.users,
             onUserClick = onUserClick,
         )
-        //if (state.users.collectAsLazyPagingItems().)
-        /*if (state.users.collectAsLazy() && state.value.loadingEnded) {
-            EmptyResults()
-        } else {
-            UserList(
-                users = state.value.users,
-                onUserClick = onUserClick,
-                shouldLoadMore = { loadMore() }
-            )
-        }*/
     }
 }

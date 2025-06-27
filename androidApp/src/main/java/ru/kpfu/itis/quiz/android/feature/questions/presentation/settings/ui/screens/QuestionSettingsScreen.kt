@@ -6,8 +6,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -26,6 +24,7 @@ import ru.kpfu.itis.quiz.android.R
 import ru.kpfu.itis.quiz.feature.questions.presentation.settings.mvi.QuestionSettingsScreenState
 import ru.kpfu.itis.quiz.android.core.designsystem.components.DropdownMenu
 import ru.kpfu.itis.quiz.android.core.designsystem.components.ErrorDialog
+import ru.kpfu.itis.quiz.android.core.designsystem.components.TextButton
 import ru.kpfu.itis.quiz.feature.questions.presentation.settings.model.QuestionSettings
 import ru.kpfu.itis.quiz.feature.questions.presentation.settings.mvi.QuestionSettingsScreenIntent
 import ru.kpfu.itis.quiz.feature.questions.presentation.settings.mvi.QuestionSettingsScreenSideEffect
@@ -144,14 +143,13 @@ fun Settings(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        Button(
+        TextButton(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 100.dp)
+                .padding(bottom = 32.dp)
                 .padding(horizontal = 64.dp),
-            onClick = onSaveClick
-        ) {
-            Text(text = stringResource(R.string.save))
-        }
+            onClick = onSaveClick,
+            text = stringResource(R.string.save),
+        )
     }
 }

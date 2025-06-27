@@ -9,7 +9,6 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
@@ -17,10 +16,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import org.koin.compose.viewmodel.koinViewModel
 import ru.kpfu.itis.quiz.android.R
-import ru.kpfu.itis.quiz.android.feature.auth.presentation.components.Logo
 import ru.kpfu.itis.quiz.android.core.designsystem.components.ErrorDialog
 import ru.kpfu.itis.quiz.android.core.designsystem.components.InputSection
+import ru.kpfu.itis.quiz.android.core.designsystem.components.Logo
 import ru.kpfu.itis.quiz.android.core.designsystem.components.PasswordInputSection
+import ru.kpfu.itis.quiz.android.core.designsystem.components.TextButton
 import ru.kpfu.itis.quiz.feature.authentication.presentation.signin.mvi.SignInScreenIntent
 import ru.kpfu.itis.quiz.feature.authentication.presentation.signin.mvi.SignInScreenSideEffect
 import ru.kpfu.itis.quiz.feature.authentication.presentation.signin.mvi.SignInScreenState
@@ -139,26 +139,23 @@ fun ScreenContent(
             verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Button(
+            TextButton(
                 onClick = {
                     onSignInBtnClick.invoke(username, password)
                 },
                 modifier = Modifier.fillMaxWidth(),
                 enabled = state.value.passwordError == null && password.isNotEmpty() &&
-                        state.value.usernameError == null && username.isNotEmpty()
-            ) {
-                Text(stringResource(R.string.sign_in))
-            }
+                        state.value.usernameError == null && username.isNotEmpty(),
+                text = stringResource(R.string.sign_in),
+            )
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            Button(
+            TextButton(
                 onClick = { onGoToRegisterClick() },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(stringResource(R.string.go_to_register))
-            }
-            Spacer(modifier = Modifier.height(12.dp))
+                modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp),
+                text = stringResource(R.string.go_to_register)
+            )
         }
     }
 }
