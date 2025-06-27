@@ -115,7 +115,9 @@ fun AnswerItem(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
-            painter = if (checked) painterResource(R.drawable.mark_checked) else painterResource(R.drawable.mark),
+            painter = if (checked)
+                painterResource(R.drawable.mark_checked)
+            else painterResource(R.drawable.mark),
             contentDescription = null,
             modifier = Modifier
                 .size(40.dp)

@@ -28,7 +28,8 @@ fun ErrorDialog(
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .wrapContentHeight(),
+                .wrapContentHeight()
+                .padding(12.dp),
             shape = RoundedCornerShape(16.dp),
         ) {
             Column(

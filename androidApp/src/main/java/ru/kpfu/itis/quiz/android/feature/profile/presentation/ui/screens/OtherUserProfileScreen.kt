@@ -1,11 +1,7 @@
 package ru.kpfu.itis.quiz.android.feature.profile.presentation.ui.screens
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.*
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -14,16 +10,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import coil3.compose.rememberAsyncImagePainter
 import org.koin.compose.viewmodel.koinViewModel
 import ru.kpfu.itis.quiz.android.R
 import ru.kpfu.itis.quiz.android.core.designsystem.components.ErrorDialog
+import ru.kpfu.itis.quiz.android.core.designsystem.components.InfoTextField
+import ru.kpfu.itis.quiz.android.core.designsystem.components.ProfilePicture
+import ru.kpfu.itis.quiz.android.core.designsystem.components.TextButton
 import ru.kpfu.itis.quiz.feature.profile.presentation.mvi.other.OtherUserProfileScreenState
-import ru.kpfu.itis.quiz.android.feature.profile.presentation.ui.components.ProfileInfoField
 import ru.kpfu.itis.quiz.android.feature.profile.presentation.ui.screens.dialogs.StatsDialog
 import ru.kpfu.itis.quiz.feature.profile.presentation.mvi.other.OtherUserProfileScreenIntent
 import ru.kpfu.itis.quiz.feature.profile.presentation.mvi.other.OtherUserProfileScreenSideEffect
@@ -58,7 +53,7 @@ fun OtherUserProfileScreen(
 
     ScreenContent(
         modifier = Modifier.fillMaxSize(),
-        state = state,
+        state = state.value,
         onGetResultsClicked = { showStatsDialog = true },
     ) {
         if (showStatsDialog) {
@@ -83,7 +78,7 @@ fun OtherUserProfileScreen(
 @Composable
 fun ScreenContent(
     modifier: Modifier = Modifier,
-    state: State<OtherUserProfileScreenState>,
+    state: OtherUserProfileScreenState,
     onGetResultsClicked: () -> Unit,
     dialogs: @Composable () -> Unit
 ) {
@@ -91,25 +86,23 @@ fun ScreenContent(
         modifier = modifier.padding(PaddingValues(top = 24.dp)),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Image(
-            painter = rememberAsyncImagePainter(state.value.user?.profilePictureUri),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.size(200.dp).clip(CircleShape)
+        ProfilePicture(
+            uri = state.user?.profilePictureUri ?: "",
+            modifier = Modifier.size(200.dp)
         )
-        ProfileInfoField(
+        InfoTextField(
             modifier = Modifier.padding(PaddingValues(top = 12.dp, start = 80.dp, end = 80.dp)),
             label = stringResource(R.string.username),
-            value = state.value.user?.username ?: ""
+            value = state.user?.username ?: ""
         )
-        ProfileInfoField(
+        InfoTextField(
             modifier = Modifier.padding(PaddingValues(top = 12.dp, start = 80.dp, end = 80.dp)),
             label = stringResource(R.string.info),
-            value = state.value.user?.info ?: ""
+            value = state.user?.info ?: ""
         )
-        ProfileInfoField(
+        InfoTextField(
             modifier = Modifier.padding(PaddingValues(top = 12.dp, start = 80.dp, end = 80.dp)),
-            label = stringResource(R.string.registration_date, state.value.user?.dateRegistered ?: ""),
+            label = stringResource(R.string.registration_date, state.user?.dateRegistered ?: ""),
             value = ""
         )
         Spacer(modifier = Modifier.weight(1f))
@@ -117,12 +110,13 @@ fun ScreenContent(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Button(
+            TextButton(
                 onClick = { onGetResultsClicked() },
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 80.dp)
-            ) {
-                Text(text = stringResource(R.string.check_stats))
-            }
+                modifier = Modifier.fillMaxWidth()
+                    .padding(horizontal = 80.dp)
+                    .padding(bottom = 12.dp),
+                text = stringResource(R.string.check_stats),
+            )
         }
     }
     dialogs()

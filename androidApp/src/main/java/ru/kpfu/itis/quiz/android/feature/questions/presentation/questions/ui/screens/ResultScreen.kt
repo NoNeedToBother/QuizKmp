@@ -87,7 +87,7 @@ fun ResultScreen(
 }
 
 @Composable
-private fun ResultText(text: String) {
+fun ResultText(text: String) {
     Text(
         text = text,
         fontFamily = FontFamily(Font(R.font.bad_script)),

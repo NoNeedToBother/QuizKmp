@@ -22,12 +22,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Photo
-import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -40,19 +40,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
-import coil3.compose.rememberAsyncImagePainter
-import coil3.request.ImageRequest
-import coil3.request.placeholder
 import org.koin.compose.viewmodel.koinViewModel
 import ru.kpfu.itis.quiz.android.R
 import ru.kpfu.itis.quiz.android.core.designsystem.components.ErrorDialog
+import ru.kpfu.itis.quiz.android.core.designsystem.components.InfoTextField
+import ru.kpfu.itis.quiz.android.core.designsystem.components.ProfilePicture
+import ru.kpfu.itis.quiz.android.core.designsystem.components.TextButton
 import ru.kpfu.itis.quiz.feature.profile.presentation.mvi.profile.ProfileScreenState
-import ru.kpfu.itis.quiz.android.feature.profile.presentation.ui.components.ProfileInfoField
 import ru.kpfu.itis.quiz.android.feature.profile.presentation.ui.screens.dialogs.CredentialsDialog
 import ru.kpfu.itis.quiz.android.feature.profile.presentation.ui.screens.dialogs.ProfilePictureDialog
 import ru.kpfu.itis.quiz.android.feature.profile.presentation.ui.screens.dialogs.ProfileSettingsDialog
@@ -115,12 +114,11 @@ fun ProfileScreen(
         onLogoutClicked = { viewModel.onIntent(ProfileScreenIntent.Logout) },
         onCheckResultsClick = { showStatsDialog = true }
     ) {
-        if (showStatsDialog) {
+        if (showStatsDialog)
             StatsDialog(
                 results = state.value.results,
                 onDismiss = { showStatsDialog = false }
             )
-        }
         profilePictureUri?.let {
             ProfilePictureDialog(
                 uri = it.toUri(),
@@ -230,17 +228,17 @@ fun ScreenContent(
                 uri = state.user?.profilePictureUri,
                 onSubmitPhotoClick = onSubmitPhotoClick
             )
-            ProfileInfoField(
+            InfoTextField(
                 modifier = Modifier.padding(PaddingValues(top = 12.dp, start = 80.dp, end = 80.dp)),
                 label = stringResource(R.string.username),
                 value = state.user?.username ?: ""
             )
-            ProfileInfoField(
+            InfoTextField(
                 modifier = Modifier.padding(PaddingValues(top = 12.dp, start = 80.dp, end = 80.dp)),
                 label = stringResource(R.string.info),
                 value = state.user?.info ?: ""
             )
-            ProfileInfoField(
+            InfoTextField(
                 modifier = Modifier.padding(PaddingValues(top = 12.dp, start = 80.dp, end = 80.dp)),
                 label = stringResource(R.string.registration_date, state.user?.dateRegistered ?: ""),
                 value = ""
@@ -251,14 +249,14 @@ fun ScreenContent(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Button(
+                TextButton(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 80.dp),
-                    onClick = onCheckResultsClick
-                ) {
-                    Text(stringResource(R.string.check_stats))
-                }
+                        .padding(horizontal = 80.dp)
+                        .padding(bottom = 12.dp),
+                    onClick = onCheckResultsClick,
+                    text = stringResource(R.string.check_stats)
+                )
             }
         }
     }
@@ -272,19 +270,9 @@ fun ProfileImage(
     onSubmitPhotoClick: () -> Unit
 ) {
     Box(modifier = modifier.size(220.dp)) {
-        Image(
-            painter = rememberAsyncImagePainter(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(uri?.toUri())
-                    .placeholder(R.drawable.default_pfp)
-                    .build(),
-            ),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .size(200.dp)
-                .align(Alignment.Center)
-                .clip(CircleShape)
+        ProfilePicture(
+            uri = uri ?: "",
+            modifier = Modifier.size(200.dp).align(Alignment.Center)
         )
         FloatingActionButton(
             onClick = onSubmitPhotoClick,
@@ -322,7 +310,8 @@ fun SettingsMenu(
                 .clickable {
                     expanded = true
                     atEnd = !atEnd
-                }
+                },
+            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface)
         )
         DropdownMenu(
             expanded = expanded,

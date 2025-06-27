@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -15,21 +14,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import ru.kpfu.itis.quiz.android.core.designsystem.theme.Typography
-
-@Composable
-fun ProfileInfoField(
-    modifier: Modifier = Modifier,
-    label: String,
-    value: String
-) {
-    OutlinedTextField(
-        value = value,
-        onValueChange = {},
-        label = { Text(label) },
-        enabled = false,
-        modifier = modifier
-    )
-}
 
 @Composable
 fun DialogWithTitle(
