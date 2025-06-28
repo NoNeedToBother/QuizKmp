@@ -2,6 +2,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
+    alias(libs.plugins.kotlinCocoapods)
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.ksp)
@@ -27,6 +28,19 @@ kotlin {
     ).forEach {
         it.binaries.framework {
             baseName = "shared"
+            isStatic = true
+        }
+    }
+
+    cocoapods {
+        summary = "QuizKMP app shared module"
+        homepage = "Link to the Shared Module homepage"
+        version = "1.0"
+        ios.deploymentTarget = "16.0"
+        podfile = project.file("../iosApp/Podfile")
+
+        framework {
+            baseName = "Shared"
             isStatic = true
         }
     }
