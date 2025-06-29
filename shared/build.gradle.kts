@@ -103,3 +103,12 @@ dependencies {
     add("kspIosX64", libs.room.compiler)
     add("kspIosArm64", libs.room.compiler)
 }
+
+tasks {
+    configureEach {
+        if (this.name.contains("kspDebugKotlinAndroid")) {
+            this.dependsOn("libresGenerateStrings")
+            this.dependsOn("libresGenerateResources")
+        }
+    }
+}
